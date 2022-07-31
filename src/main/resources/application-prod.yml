@@ -21,4 +21,3 @@ spring:
 logging:
   level:
     '[org.springframework.boot.web]': INFO
-  [출처] 스프링부트 + Junit 강의 yml 코드 (메타코딩) | 작성자 metacoding
