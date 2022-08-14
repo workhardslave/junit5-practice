@@ -4,6 +4,7 @@ import com.proj.junit5.domain.Book;
 import com.proj.junit5.domain.BookRepository;
 import com.proj.junit5.web.dto.BookResponseDto;
 import com.proj.junit5.web.dto.BookSaveRequestDto;
+import com.proj.junit5.web.dto.BookUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +19,20 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    // 등록
+    /**
+     * 책 저장
+     * @param dto
+     * @return
+     */
     public BookResponseDto saveBook(BookSaveRequestDto dto) {
         Book savedBook = bookRepository.save(dto.toEntity()); // 영속화된 객체는 서비스 레이어에서 빠져나가지 않도록 해야한다.
         return new BookResponseDto().toDto(savedBook);
     }
 
-    // 목록
+    /**
+     * 책 전체 조회
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<BookResponseDto> findAllBooks() {
         return bookRepository.findAll().stream() // 1. 스트림 생성
@@ -32,7 +40,11 @@ public class BookService {
                 .collect(Collectors.toList()); // 3. 변환된 BookResponseDto를 리스트 형태로 변환하여 리턴
     }
 
-    // 단건
+    /**
+     * 책 단건 조회
+     * @param id
+     * @return
+     */
     @Transactional(readOnly = true)
     public BookResponseDto findBookById(Long id) {
         Book foundBook = bookRepository.findById(id)
@@ -40,7 +52,21 @@ public class BookService {
         return new BookResponseDto().toDto(foundBook);
     }
 
-    // 삭제
+    /**
+     * 책 삭제
+     * @param id
+     */
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
+    }
 
-    // 수정정
+    /**
+     * 책 수정
+     * @param dto
+     */
+    public void updateBook(BookUpdateRequestDto dto) {
+        Book foundBook = bookRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 id 입니다. " + dto.getId()));
+        foundBook.update(dto); // Dirty Check
+    }
 }

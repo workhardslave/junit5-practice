@@ -32,9 +32,11 @@ class BookRepositoryTest {
     public void initDummyData() {
         final String title = "test-code";
         final String author = "hsh";
+        final String isbn = "1234-5678-90";
         Book book = Book.builder()
                 .title(title)
                 .author(author)
+                .isbn(isbn)
                 .build();
         bookRepository.save(book);
     }
@@ -64,9 +66,11 @@ class BookRepositoryTest {
         final Long id = 2L;
         final String title = "junit5";
         final String author = "workhardslave";
+        final String isbn = "1234-5678-90";
         Book book = Book.builder()
                 .title(title)
                 .author(author)
+                .isbn(isbn)
                 .build();
 
         // when (테스트 실행)
@@ -85,6 +89,7 @@ class BookRepositoryTest {
         final Long id = 1L;
         final String title = "test-code";
         final String author = "hsh";
+        final String isbn = "1234-5678-90";
 
         // when
         List<Book> bookList = bookRepository.findAll();
@@ -93,6 +98,7 @@ class BookRepositoryTest {
 //        assertEquals(id, bookList.get(0).getId());
         assertEquals(title, bookList.get(0).getTitle());
         assertEquals(author, bookList.get(0).getAuthor());
+        assertEquals(isbn, bookList.get(0).getIsbn());
     }
 
     @Sql("classpath:db/tableInit.sql")
@@ -103,6 +109,7 @@ class BookRepositoryTest {
         final Long id = 1L;
         final String title = "test-code";
         final String author = "hsh";
+        final String isbn = "1234-5678-90";
 
         // when
         Book foundBook = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 아이디 입니다. " + id));
@@ -111,6 +118,7 @@ class BookRepositoryTest {
         assertEquals(id, foundBook.getId());
         assertEquals(title, foundBook.getTitle());
         assertEquals(author, foundBook.getAuthor());
+        assertEquals(isbn, foundBook.getIsbn());
     }
 
     @Sql("classpath:db/tableInit.sql")
@@ -136,7 +144,8 @@ class BookRepositoryTest {
         final Long id = 1L;
         final String title = "junit5";
         final String author = "workhardslave";
-        Book book = new Book(id, title, author);
+        final String isbn = "1234-5678-90";
+        Book book = new Book(id, title, author, isbn);
 
         // when
         Book updatedBook = bookRepository.save(book);
@@ -145,5 +154,6 @@ class BookRepositoryTest {
         assertEquals(1, bookRepository.findAll().size());
         assertEquals(title, updatedBook.getTitle());
         assertEquals(author, updatedBook.getAuthor());
+        assertEquals(isbn, updatedBook.getIsbn());
     }
 }
