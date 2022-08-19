@@ -2,6 +2,7 @@ package com.proj.junit5.service;
 
 import com.proj.junit5.domain.Book;
 import com.proj.junit5.domain.BookRepository;
+import com.proj.junit5.util.MailSender;
 import com.proj.junit5.web.dto.BookResponseDto;
 import com.proj.junit5.web.dto.BookSaveRequestDto;
 import com.proj.junit5.web.dto.BookUpdateRequestDto;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final MailSender mailSender;
 
     /**
      * 책 저장
@@ -26,6 +28,9 @@ public class BookService {
      */
     public BookResponseDto saveBook(BookSaveRequestDto dto) {
         Book savedBook = bookRepository.save(dto.toEntity()); // 영속화된 객체는 서비스 레이어에서 빠져나가지 않도록 해야한다.
+        if (!mailSender.send()) {
+            throw new RuntimeException("메일이 전송되지 않았습니다.");
+        }
         return new BookResponseDto().toDto(savedBook);
     }
 
